@@ -1,4 +1,4 @@
-package backend;
+package structures;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;

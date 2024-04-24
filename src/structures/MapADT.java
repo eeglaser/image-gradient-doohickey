@@ -1,4 +1,4 @@
-package backend;
+package structures;
 import java.util.NoSuchElementException;
 
 /**

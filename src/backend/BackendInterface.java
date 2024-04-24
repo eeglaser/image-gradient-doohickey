@@ -18,9 +18,9 @@ public interface BackendInterface {
   // -- self-balancing 2-3-4 tree?
   // Use List for quickly returning list of all loaded images
   // -- keep an ArrayList here, or perhaps the SearchTree can give us a list in order?
-  
+
   // ---------------------------------------------------------------------------------
-  
+
   /**
    * Receives a list of Files from the frontend and loads them into the backend.
    * 
@@ -86,6 +86,15 @@ public interface BackendInterface {
    * @return an ImageWithAverages that is similar to the specified color
    */
   public ImageWithAverages findImageClosestToColor(Color color);
+
+  /**
+   * Creates a dummy ImageWithAverages to use in place of a loaded image. This dummy will have an
+   * Image made up entirely of pixels of the color it represents, and all its averages will of
+   * course point to that color. <br>
+   * 
+   * @param color The color that the object will represent
+   */
+  public ImageWithAverages createDummyImageFromColor(Color color);
 
   /**
    * Gets a list of every image currently loaded.
