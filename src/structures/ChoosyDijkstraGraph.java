@@ -12,22 +12,24 @@ import java.util.Collections;
 import java.util.NoSuchElementException;
 
 /**
- * This class extends the BaseGraph data structure with additional methods for computing the total
- * cost and list of node data along the shortest path connecting a provided starting to ending
- * nodes. This class makes use of Dijkstra's shortest path algorithm.
+ * TODO remove placeholders This class extends the BaseGraph data structure with additional methods
+ * for computing the total cost and list of node data along the shortest path connecting a provided
+ * starting to ending nodes. This class makes use of Dijkstra's shortest path algorithm to find the
+ * shortest path between nodes. It also can disable any given node so that it is not considered
+ * while finding the shortest path.
  */
-public class DijkstraGraph<NodeType, EdgeType extends Number> extends BaseGraph<NodeType, EdgeType>
-    implements GraphADT<NodeType, EdgeType> {
+public class ChoosyDijkstraGraph<NodeType, EdgeType extends Number>
+    extends ChoosyBaseGraph<NodeType, EdgeType> implements GraphADT<NodeType, EdgeType> {
 
   /**
    * While searching for the shortest path between two nodes, a SearchNode contains data about one
    * specific path between the start node and another node in the graph. The final node in this path
    * is stored in its node field. The total cost of this path is stored in its cost field. And the
    * predecessor SearchNode within this path is referenced by the predecessor field (this field is
-   * null within the SearchNode containing the starting node in its node field).
-   *
+   * null within the SearchNode containing the starting node in its node field).<br>
+   * 
    * SearchNodes are Comparable and are sorted by cost so that the lowest cost SearchNode has the
-   * highest priority within a java.util.PriorityQueue.
+   * highest priority within a java.util.PriorityQueue.<br>
    */
   protected class SearchNode implements Comparable<SearchNode> {
     public Node node;
@@ -52,8 +54,8 @@ public class DijkstraGraph<NodeType, EdgeType extends Number> extends BaseGraph<
   /**
    * Constructor that sets the map that the graph uses.
    */
-  public DijkstraGraph() {
-    super(new PlaceholderMap<>());
+  public ChoosyDijkstraGraph() {
+    super(new PlaceholderMap<>()); // TODO placeholder
   }
 
   /**
@@ -82,9 +84,9 @@ public class DijkstraGraph<NodeType, EdgeType extends Number> extends BaseGraph<
     edgeQueue.add(new SearchNode(nodes.get(start), 0, null));
     SearchNode resultNode = null;
     while (!edgeQueue.isEmpty()) {
-      SearchNode currNode = edgeQueue.poll(); // this queue has weird method names
+      SearchNode currNode = edgeQueue.poll();
       // If destination is unvisited...
-      if (!visitedNodesMap.containsKey(currNode.node)) { // TODO is this what they wanted
+      if (!visitedNodesMap.containsKey(currNode.node)) {
         // Mark as visited
         visitedNodesMap.put(currNode.node, currNode.node);
         // If destination is our end node...
@@ -93,9 +95,9 @@ public class DijkstraGraph<NodeType, EdgeType extends Number> extends BaseGraph<
           resultNode = currNode;
           break;
         }
-        // For each edge leading to an unvisited neighbor...
+        // For each edge leading to an enable and unvisited neighbor...
         for (Edge e : currNode.node.edgesLeaving) {
-          if (!visitedNodesMap.containsKey(e.successor)) {
+          if (!e.successor.isDisabled && !visitedNodesMap.containsKey(e.successor)) {
             // Add potential edge to queue
             edgeQueue.add(new SearchNode(nodes.get(e.successor.data),
                 ((Number) currNode.cost).doubleValue() + ((Number) e.data).doubleValue(),
@@ -163,5 +165,4 @@ public class DijkstraGraph<NodeType, EdgeType extends Number> extends BaseGraph<
     // Return cumulative cost, which is stored cumulatively in SearchNodes already
     return resultNode.cost;
   }
-
 }
