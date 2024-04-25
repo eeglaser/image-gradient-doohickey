@@ -3,6 +3,7 @@ package backend;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import javafx.scene.paint.Color;
 import structures.ChoosyDijkstraGraph;
 
@@ -24,47 +25,82 @@ public class Backend implements BackendInterface {
     allImages = new ArrayList<ImageWithAverages>();
   }
 
+  /**
+   * Takes a File and loads it into the graph.
+   */
   @Override
-  public void receiveFiles(List<File> file) {
-    // TODO Auto-generated method stub
-
+  public void receiveFile(File file) {
+    if (file.isDirectory()) {
+      for (File f : file.listFiles()) {
+        ImageWithAverages ia = new ImageWithAverages(f);
+        addImageToGraph(ia);
+      }
+    } else {
+      ImageWithAverages ia = new ImageWithAverages(file);
+      addImageToGraph(ia);
+    }
   }
 
+  /**
+   * Removes an image and all adjacent edges from the graph.
+   * 
+   * @param the ImageWithAverages to remove
+   * @return true if it was successfully removed, false otherwise
+   */
   @Override
-  public boolean removeImagesFromGraph(List<ImageWithAverages> images) {
-    // TODO Auto-generated method stub
-    return false;
+  public boolean removeImageFromGraph(ImageWithAverages image) {
+    return graph.removeNode(image); // throws NPE if image is null
   }
 
-  public boolean addImagesToGraph(List<ImageWithAverages> images) {
+  /**
+   * Adds an image to the graph.
+   * 
+   * @param image
+   * @return
+   */
+  public boolean addImageToGraph(ImageWithAverages image) {
     boolean retval = true;
     // Nodes must be in the graph before edges can be added
-    for(ImageWithAverages i : images) {
-      boolean nodeWorked = graph.insertNode(i); // throws npe if an element is null
-      if(nodeWorked) {
-        allImages.add(i);
-      }
-      retval &= nodeWorked;
+    boolean nodeWorked = graph.insertNode(image); // throws npe if an element is null
+    if (nodeWorked) {
+      allImages.add(image);
     }
+    retval &= nodeWorked;
     // Now all new edges can be added
     // I love my N^2 runtime
-    for(ImageWithAverages i : images) {
-      for(ImageWithAverages j : allImages) {
-        if(!i.equals(j)) {
-          double dist = computeDistanceBetweenImages(i, j);
-          retval &= graph.insertEdge(i, j, dist);
-          graph.insertEdge(j, i, dist);
-        }
+    for (ImageWithAverages j : allImages) {
+      if (!image.equals(j)) {
+        double dist = computeDistanceBetweenImages(image, j);
+        retval &= graph.insertEdge(image, j, dist);
+        graph.insertEdge(j, image, dist);
       }
     }
     return retval;
   }
 
+  /**
+   * Calculates and returns the shortest path between two images.
+   * 
+   * @param image1 The starting image
+   * @param image2 The ending image
+   * @return A List of ImageWithAverages representing the path, sorted in order of when each image
+   *         is visited
+   * @throws NullPointerException     if a parameter is null
+   * @throws IllegalArgumentException if a parameter is not in the graph
+   * @throws NoSuchElementException   if no path between the given images exists
+   */
   @Override
   public List<ImageWithAverages> getPathBetweenImages(ImageWithAverages image1,
-      ImageWithAverages image2) {
-    // TODO Auto-generated method stub
-    return null;
+      ImageWithAverages image2)
+      throws NullPointerException, IllegalArgumentException, NoSuchElementException {
+    if (image1 == null || image2 == null) {
+      throw new NullPointerException("Both images must be set and not null");
+    }
+    if (!graph.containsNode(image1) || !graph.containsNode(image2)) {
+      throw new IllegalArgumentException("Both images must be in the graph");
+    }
+
+    return graph.shortestPathData(image1, image2);
   }
 
   /**

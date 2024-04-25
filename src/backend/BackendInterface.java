@@ -26,7 +26,7 @@ public interface BackendInterface {
    * 
    * @param file A List of files to load into the backend.
    */
-  public void receiveFiles(List<File> file);
+  public void receiveFile(File file);
 
   // private void unpackSingleFile(File file);
 
@@ -51,7 +51,7 @@ public interface BackendInterface {
    * @return true if all images were found and removed, false if at least one image was unable to be
    *         removed
    */
-  public boolean removeImagesFromGraph(List<ImageWithAverages> images);
+  public boolean removeImageFromGraph(ImageWithAverages images);
 
   /**
    * Finds the shortest path between two images.

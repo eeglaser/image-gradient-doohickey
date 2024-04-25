@@ -1,5 +1,6 @@
 package backend;
 
+import java.io.File;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.paint.Color;
@@ -8,7 +9,7 @@ import javafx.scene.paint.Color;
  * This class is a shiny wrapper for a JavaFX Image, with its relevant averages easily accessible.
  */
 public class ImageWithAverages {
-  private Image image;
+  private Image image; // treat this image as a thumbnail.
   private double r;
   private double g;
   private double b;
@@ -24,10 +25,13 @@ public class ImageWithAverages {
    * 
    * @param image
    */
-  public ImageWithAverages(Image image) {
-    this.image = image;
+  public ImageWithAverages(File file) {
+    String uri = file.toURI().toString();
+    this.image = new Image(uri);
     calculateAverages();
     color = new Color(r, g, b, a);
+    // Now we scale the image down to a 32x32 thumbnail to take up less memory
+    this.image = new Image(uri, 32, 32, false, false);
   }
 
   /**
