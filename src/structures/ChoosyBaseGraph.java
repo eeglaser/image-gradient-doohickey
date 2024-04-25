@@ -5,10 +5,8 @@ import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
 /**
- * This BaseGraph class contains stores a set of nodes, along with a set of directed and weighted
- * edges connecting those nodes.<br>
- * TODO: implement node-disabling functionality? Implement methods that get and set the disabled
- * property of a node
+ * This ChoosyBaseGraph class contains stores a set of nodes, along with a set of directed and
+ * weighted edges connecting those nodes. Nodes have an isDisabled field.<br>
  */
 public class ChoosyBaseGraph<NodeType, EdgeType extends Number> {
 
