@@ -42,7 +42,8 @@ public class Backend implements BackendInterface {
   }
 
   /**
-   * Removes an image and all adjacent edges from the graph.
+   * Removes an image from the Backend. Its node and all adjacent edges will be removed from the
+   * graph. This is not the same as disabling an image!
    * 
    * @param the ImageWithAverages to remove
    * @return true if it was successfully removed, false otherwise
@@ -53,7 +54,7 @@ public class Backend implements BackendInterface {
   }
 
   /**
-   * Adds an image to the graph.
+   * Adds an image to the Backend. All image nodes in the graph are fully connected.
    * 
    * @param image
    * @return
