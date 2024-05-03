@@ -1,8 +1,12 @@
-package backend;
+package test;
 
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import main.backend.Backend;
 
 /**
  * Tests the Backend with JUnit tests for each method.
@@ -11,7 +15,8 @@ public class BackendUnitTests {
   Backend back; // The current backend instance being used for testing.
 
   // The base local directory for files used in our tests
-  private static final String BASE_DIRECTORY = "test-resources";
+  // TODO change one project is named something professional :P
+  private static final String BASE_DIRECTORY = "image-gradient-doohickey";
 
   @BeforeEach
   public void initialize() {
@@ -24,9 +29,15 @@ public class BackendUnitTests {
   /**
    * Tests Backend's receiveFile method when passed a single image file.
    */
+  @Test
   public void testLoadFile() {
     // We don't want the preloaded tester files from initialize() for this test.
     back = new Backend();
+    
+    // Load in one file...
+    back.receiveFile(getFile("test/assets/Test_HSV_All69.png"));
+
+    // Check that the graph now contains the expected file
 
 
   }
@@ -34,8 +45,9 @@ public class BackendUnitTests {
   /**
    * Tests Backend's receiveFile method when passed a file directory full of multiple images.
    */
+  @Test
   public void testLoadDirectory() {
-
+    // TODO
   }
 
   /**
@@ -46,7 +58,8 @@ public class BackendUnitTests {
   }
 
   /**
-   * Tests Backend's receiveFile method when passed a file directory that has non-images in it.
+   * Tests Backend's receiveFile method when passed a file directory that has non-supported files in
+   * it.
    */
   public void testLoadBadDirectory() {
 
@@ -67,7 +80,21 @@ public class BackendUnitTests {
     if (file.exists()) {
       return file;
     } else {
-      Assertions.fail("File built from " + relativePath + " does not exist: " + absolutePath);
+      // We were unable to get the file normally.
+      // Now, try to find it through the classpath. This way usually plays nicer with Eclipse.
+      URI uri;
+      try {
+        uri = BackendUnitTests.class.getClassLoader().getResource(relativePath).toURI();
+      }catch(URISyntaxException e) {
+        Assertions.fail("URI syntax error: " + e.getStackTrace());
+        return null;
+      }
+      file = new File(uri);
+      if(file.exists()) {
+        return file;
+      }else {
+        Assertions.fail("File could not be found by uri: " + uri.toString());
+      }
     }
     return null; // Default return statement to satisfy compiler
   }

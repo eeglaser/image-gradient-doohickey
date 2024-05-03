@@ -1,4 +1,4 @@
-package backend;
+package main.backend;
 
 import java.io.File;
 import java.util.List;

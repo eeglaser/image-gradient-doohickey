@@ -3,7 +3,7 @@
 // Email: eeglaser@wisc.edu
 // Lecturer: Florian Heimerl
 // Notes to Grader: wergh
-package structures;
+package main.structures;
 
 import java.util.PriorityQueue;
 import java.util.List;

@@ -1,4 +1,5 @@
-package structures;
+package main.structures;
+
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 

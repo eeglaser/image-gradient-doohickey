@@ -1,4 +1,5 @@
-package structures;
+package main.structures;
+
 import java.util.NoSuchElementException;
 
 /**

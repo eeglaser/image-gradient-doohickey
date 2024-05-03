@@ -1,11 +1,11 @@
-package backend;
+package main.backend;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import javafx.scene.paint.Color;
-import structures.ChoosyDijkstraGraph;
+import main.structures.ChoosyDijkstraGraph;
 
 public class Backend implements BackendInterface {
   /**
