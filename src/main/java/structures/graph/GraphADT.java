@@ -1,4 +1,4 @@
-package main.structures;
+package main.java.structures.graph;
 
 import java.util.List;
 import java.util.NoSuchElementException;

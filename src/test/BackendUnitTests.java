@@ -6,7 +6,7 @@ import java.net.URISyntaxException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import main.backend.Backend;
+import main.java.backend.Backend;
 
 /**
  * Tests the Backend with JUnit tests for each method.

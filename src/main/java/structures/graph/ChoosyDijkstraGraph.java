@@ -1,11 +1,7 @@
-// === CS400 File Header Information ===
-// Name: Emma Glaser
-// Email: eeglaser@wisc.edu
-// Lecturer: Florian Heimerl
-// Notes to Grader: wergh
-package main.structures;
+package main.java.structures.graph;
 
 import java.util.PriorityQueue;
+import main.java.structures.map.PlaceholderMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;

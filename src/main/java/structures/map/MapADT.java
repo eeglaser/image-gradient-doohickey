@@ -1,4 +1,4 @@
-package main.structures;
+package main.java.structures.map;
 
 import java.util.NoSuchElementException;
 
