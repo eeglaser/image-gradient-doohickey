@@ -1,5 +1,6 @@
 package main.java.backend;
 
+import java.awt.color.ColorSpace;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -109,14 +110,26 @@ public class Backend {
 
   /**
    * Computes the Euclidean distance between two images using the values associated with their
-   * average Colors.
+   * average Colors in HSV.
    * 
    * @param image1 The first image to use
    * @param image2 The second image to use
    * @return the distance between the two images
    */
   public double computeDistanceBetweenImages(PreprocessedImage image1, PreprocessedImage image2) {
-    return 0.0; // TODO
+    float[] components1HSV = new float[] {};
+    float[] components2HSV = new float[] {};
+    image1.getColor().getColorComponents(ColorSpace.getInstance(ColorSpace.TYPE_HSV),
+        components1HSV);
+    image2.getColor().getColorComponents(ColorSpace.getInstance(ColorSpace.TYPE_HSV),
+        components2HSV);
+    
+    float sumOfSquares = 0;
+    for(int i = 0; i < components1HSV.length; i++) {
+      sumOfSquares += Math.pow((components1HSV[i] - components2HSV[i]), 2);
+    }
+    
+    return Math.sqrt(sumOfSquares);
   }
 
   /**
