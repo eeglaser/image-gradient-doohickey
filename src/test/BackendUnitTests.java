@@ -1,6 +1,7 @@
 package test;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import org.junit.jupiter.api.Assertions;
@@ -35,7 +36,11 @@ public class BackendUnitTests {
     back = new Backend();
     
     // Load in one file...
-    back.receiveFile(getFile("test/assets/Test_HSV_All69.png"));
+    try {
+      back.receiveFile(getFile("test/assets/Test_HSV_All69.png"));
+    } catch (IOException e) {
+      Assertions.fail(e.getStackTrace().toString());
+    }
 
     // Check that the graph now contains the expected file
 

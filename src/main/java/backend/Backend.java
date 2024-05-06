@@ -1,10 +1,12 @@
 package main.java.backend;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import main.java.structures.graph.ChoosyDijkstraGraph;
+
 // TODO engineer the backend better lol
 public class Backend {
   /**
@@ -26,18 +28,21 @@ public class Backend {
 
   /**
    * Takes a File and loads it into the graph.
+   * 
+   * @throws IOException If there was trouble loading the image
    */
-  public void receiveFile(File file) {
+  public void receiveFile(File file) throws IOException {
     if (file.isDirectory()) {
       for (File f : file.listFiles()) {
-        // TODO
-        //PreprocessedImage ia = new PreprocessedImage(f);
-        //addImageToGraph(ia);
+        PreprocessedImage image =
+            new PreprocessedImage(f.getPath(), ImageServiceFactory.getImageProcessor()
+                .processImage(ImageServiceFactory.getImageLoader().loadImage(file)));
+        addImageToGraph(image);
       }
     } else {
-      // TODO
-      //PreprocessedImage ia = new PreprocessedImage(file);
-      //addImageToGraph(ia);
+      PreprocessedImage image = new PreprocessedImage(file.getPath(), ImageServiceFactory
+          .getImageProcessor().processImage(ImageServiceFactory.getImageLoader().loadImage(file)));
+      addImageToGraph(image);
     }
   }
 
@@ -103,7 +108,8 @@ public class Backend {
   }
 
   /**
-   * Computes the Euclidean distance between two images using each of their numeric properties.
+   * Computes the Euclidean distance between two images using the values associated with their
+   * average Colors.
    * 
    * @param image1 The first image to use
    * @param image2 The second image to use
@@ -112,17 +118,6 @@ public class Backend {
   public double computeDistanceBetweenImages(PreprocessedImage image1, PreprocessedImage image2) {
     return 0.0; // TODO
   }
-
-  /** TODO
-  public PreprocessedImage findImageClosestToColor(Color color) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  public PreprocessedImage createDummyImageFromColor(Color color) {
-    // TODO Auto-generated method stub
-    return null;
-  } **/
 
   /**
    * Returns a list of all images currently loaded onto the backend.
