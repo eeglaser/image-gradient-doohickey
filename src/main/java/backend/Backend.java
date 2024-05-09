@@ -16,8 +16,13 @@ public class Backend {
    * The graph that the backend uses to find the shortest path.
    */
   protected ChoosyDijkstraGraph<PreprocessedImage, Double> graph = null;
-  
-  public final String[] SUPPORTED_FILE_EXTENSIONS;
+
+  // TODO verify more supported images.
+  /**
+   * A list of the file extensions that are supported by the Backend. Only files with these
+   * extensions can be loaded when calling receiveFile. Others will be ignored.
+   */
+  public static final String[] SUPPORTED_FILE_EXTENSIONS = new String[] {".png", ".jpg", ".jpeg"};
 
   /**
    * Creates a new Backend
@@ -25,38 +30,53 @@ public class Backend {
   public Backend() {
     graph = new ChoosyDijkstraGraph<PreprocessedImage, Double>();
     allImages = new ArrayList<PreprocessedImage>();
-    // TODO verify more supported images.
-    SUPPORTED_FILE_EXTENSIONS = new String[] {".png", ".jpg", ".jpeg"};
   }
 
   /**
    * Takes a File and loads it into the graph.
    * 
    * @throws IOException If there was trouble loading the file
+   * @see main.java.backend.Backend.SUPPORTED_FILE_EXTENSIONS
    */
   public void receiveFile(File file) throws IOException {
     if (file.isDirectory()) {
       for (File f : file.listFiles((pathname) -> {
-        // FileFilter only accepts supported image files.
-        String fileName = pathname.getName();
-        String fileExtension = fileName.substring(fileName.indexOf('.'));
-        
-        // Checks if the file's extensions is found in the list of supported extensions.
-        boolean retval = false;
-        for(int i = 0; i < SUPPORTED_FILE_EXTENSIONS.length; i++) {
-          retval |= SUPPORTED_FILE_EXTENSIONS[i].equals(fileExtension);
-        }
-        return retval;
+        // Lambda creates a FileFilter that only accepts supported image files.
+        return hasSupportedExtension(pathname);
       })) {
+        // Now, the loop will only loop through supported files in this directory.
+
+        // This ugly command chain loads and processes the average color of a BufferedImage that
+        // gets created from our file.
         PreprocessedImage image = new PreprocessedImage(f.getPath(), ImageServiceFactory
             .getImageProcessor().processImage(ImageServiceFactory.getImageLoader().loadImage(f)));
         addImageToGraph(image);
+
       }
     } else {
+      // This branch concerns when the file param is just one file and not a directory.
+      // Single files have to be supported too!
+      if (!hasSupportedExtension(file)) {
+        return;
+      }
+      // This ugly command chain loads and processes the average color of a BufferedImage that
+      // gets created from our file.
       PreprocessedImage image = new PreprocessedImage(file.getPath(), ImageServiceFactory
           .getImageProcessor().processImage(ImageServiceFactory.getImageLoader().loadImage(file)));
       addImageToGraph(image);
     }
+  }
+
+  private boolean hasSupportedExtension(File pathname) {
+    String fileName = pathname.getName();
+    String fileExtension = fileName.substring(fileName.indexOf('.'));
+
+    // Checks if the file's extensions is found in the list of supported extensions.
+    boolean retval = false;
+    for (int i = 0; i < SUPPORTED_FILE_EXTENSIONS.length; i++) {
+      retval |= SUPPORTED_FILE_EXTENSIONS[i].equals(fileExtension);
+    }
+    return retval;
   }
 
   /**
