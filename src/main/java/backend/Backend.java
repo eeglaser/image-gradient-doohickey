@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import main.java.structures.graph.ChoosyDijkstraGraph;
 
-// TODO engineer the backend better lol
 public class Backend {
   /**
    * List of all images loaded on the backend.
@@ -35,9 +34,8 @@ public class Backend {
   public void receiveFile(File file) throws IOException {
     if (file.isDirectory()) {
       for (File f : file.listFiles()) {
-        PreprocessedImage image =
-            new PreprocessedImage(f.getPath(), ImageServiceFactory.getImageProcessor()
-                .processImage(ImageServiceFactory.getImageLoader().loadImage(file)));
+        PreprocessedImage image = new PreprocessedImage(f.getPath(), ImageServiceFactory
+            .getImageProcessor().processImage(ImageServiceFactory.getImageLoader().loadImage(f)));
         addImageToGraph(image);
       }
     } else {
@@ -110,25 +108,23 @@ public class Backend {
 
   /**
    * Computes the Euclidean distance between two images using the values associated with their
-   * average Colors in HSV.
+   * average Colors in RGB.
    * 
    * @param image1 The first image to use
    * @param image2 The second image to use
    * @return the distance between the two images
    */
   public double computeDistanceBetweenImages(PreprocessedImage image1, PreprocessedImage image2) {
-    float[] components1HSV = new float[] {};
-    float[] components2HSV = new float[] {};
-    image1.getColor().getColorComponents(ColorSpace.getInstance(ColorSpace.TYPE_HSV),
-        components1HSV);
-    image2.getColor().getColorComponents(ColorSpace.getInstance(ColorSpace.TYPE_HSV),
-        components2HSV);
-    
+    float[] components1RGB = new float[] {image1.getColor().getRed(), image1.getColor().getGreen(),
+        image1.getColor().getBlue(), image1.getColor().getAlpha()};
+    float[] components2RGB = new float[] {image2.getColor().getRed(), image2.getColor().getGreen(),
+        image2.getColor().getBlue(), image2.getColor().getAlpha()};
+
     float sumOfSquares = 0;
-    for(int i = 0; i < components1HSV.length; i++) {
-      sumOfSquares += Math.pow((components1HSV[i] - components2HSV[i]), 2);
+    for (int i = 0; i < components1RGB.length; i++) {
+      sumOfSquares += Math.pow((components1RGB[i] - components2RGB[i]), 2);
     }
-    
+
     return Math.sqrt(sumOfSquares);
   }
 

@@ -1,13 +1,16 @@
 package test;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import main.java.backend.Backend;
+import main.java.backend.PreprocessedImage;
 
 /**
  * Tests the Backend with JUnit tests for each method.
@@ -16,13 +19,13 @@ public class BackendUnitTests {
   Backend back; // The current backend instance being used for testing.
 
   // The base local directory for files used in our tests
-  // TODO change one project is named something professional :P
+  // TODO change once project is named something professional :P
   private static final String BASE_DIRECTORY = "image-gradient-doohickey";
 
   @BeforeEach
   public void initialize() {
     back = new Backend();
-    // TODO load tester file
+    // TODO load tester files
   }
 
   // ----------------------------------- File Loading -----------------------------------
@@ -34,17 +37,26 @@ public class BackendUnitTests {
   public void testLoadFile() {
     // We don't want the preloaded tester files from initialize() for this test.
     back = new Backend();
-    
+    String testFilePath = "test/assets/Test_RGB_158_176_54.png";
+
     // Load in one file...
     try {
-      back.receiveFile(getFile("test/assets/Test_HSV_All69.png"));
+      File testFile = getFile(testFilePath);
+      back.receiveFile(testFile);
+
+      // Check that the graph now contains the expected file and has expected properties
+      List<PreprocessedImage> allImages = back.getAllImages();
+      // Expected number of nodes in graph
+      Assertions.assertTrue(allImages.size() == 1,
+          "Backend's list of images was the wrong size: " + allImages.size());
+      // Image has expected file path
+      Assertions.assertTrue(allImages.get(0).getImagePath().equals(testFile.getPath()),
+          "Backend's loaded image had the wrong path: " + allImages.get(0).getImagePath());
+      // Image has expected Color
+      Assertions.assertTrue(isCloseColor(allImages.get(0).getColor(), new Color(158, 176, 54)));
     } catch (IOException e) {
-      Assertions.fail(e.getStackTrace().toString());
+      Assertions.fail(e.getMessage());
     }
-
-    // Check that the graph now contains the expected file
-
-
   }
 
   /**
@@ -52,7 +64,29 @@ public class BackendUnitTests {
    */
   @Test
   public void testLoadDirectory() {
-    // TODO
+ // We don't want the preloaded tester files from initialize() for this test.
+    back = new Backend();
+    String testFilePath = "test/assets/Test_Directory_Valid";
+
+    // Load in one file...
+    try {
+      File testFile = getFile(testFilePath);
+      back.receiveFile(testFile);
+
+      // Check that the graph now contains the expected file and has expected properties
+      List<PreprocessedImage> allImages = back.getAllImages();
+      // Expected number of nodes in graph
+      Assertions.assertTrue(allImages.size() == 2,
+          "Backend's list of images was the wrong size: " + allImages.size());
+      // Images have expected file paths
+      /*Assertions.assertTrue(allImages.get(0).getImagePath().equals(testFile.getPath()),
+          "Backend's loaded image had the wrong path: " + allImages.get(0).getImagePath());*/
+      // Images have expected Colors
+      // TODO
+      // Assertions.assertTrue(isCloseColor(allImages.get(0).getColor(), new Color(158, 176, 54)));
+    } catch (IOException e) {
+      Assertions.fail(e.getMessage());
+    }
   }
 
   /**
@@ -90,17 +124,28 @@ public class BackendUnitTests {
       URI uri;
       try {
         uri = BackendUnitTests.class.getClassLoader().getResource(relativePath).toURI();
-      }catch(URISyntaxException e) {
+      } catch (URISyntaxException e) {
         Assertions.fail("URI syntax error: " + e.getStackTrace());
         return null;
       }
       file = new File(uri);
-      if(file.exists()) {
+      if (file.exists()) {
         return file;
-      }else {
+      } else {
         Assertions.fail("File could not be found by uri: " + uri.toString());
       }
     }
     return null; // Default return statement to satisfy compiler
+  }
+  
+  private boolean isCloseColor(Color c1, Color c2) {
+    float EPSILON = 0.001f;
+    boolean retval = true;
+    float[] comp1 = new float[] { c1.getRed(), c1.getGreen(), c1.getBlue(), c1.getAlpha() };
+    float[] comp2 = new float[] { c2.getRed(), c2.getGreen(), c2.getBlue(), c2.getAlpha() };
+    for(int i = 0; i < comp1.length; i++) {
+      retval &= Math.abs(comp1[i] - comp2[i]) < EPSILON;
+    }
+    return retval;
   }
 }
