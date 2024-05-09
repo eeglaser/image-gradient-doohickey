@@ -17,7 +17,7 @@ public class Backend {
    */
   protected ChoosyDijkstraGraph<PreprocessedImage, Double> graph = null;
 
-  // TODO verify more supported images.
+  // TODO verify more supported image types.
   /**
    * A list of the file extensions that are supported by the Backend. Only files with these
    * extensions can be loaded when calling receiveFile. Others will be ignored.
@@ -35,7 +35,7 @@ public class Backend {
   /**
    * Takes a File and loads it into the graph.
    * 
-   * @throws IOException If there was trouble loading the file
+   * @throws IOException If there was unforeseen trouble loading the file
    * @see main.java.backend.Backend#SUPPORTED_FILE_EXTENSIONS
    */
   public void receiveFile(File file) throws IOException {
@@ -55,7 +55,7 @@ public class Backend {
       }
     } else {
       // This branch concerns when the file param is just one file and not a directory.
-      // Single files have to be supported too!
+      // Single files have to be supported too! We just ignore unsupported files.
       if (!hasSupportedExtension(file)) {
         return;
       }

@@ -64,8 +64,9 @@ public class BackendUnitTests {
    */
   @Test
   public void testLoadDirectory() {
- // We don't want the preloaded tester files from initialize() for this test.
+    // We don't want the preloaded tester files from initialize() for this test.
     back = new Backend();
+    // This directory has two valid images and nothing else.
     String testFilePath = "test/assets/Test_Directory_Valid";
 
     // Load in one file...
@@ -79,8 +80,10 @@ public class BackendUnitTests {
       Assertions.assertTrue(allImages.size() == 2,
           "Backend's list of images was the wrong size: " + allImages.size());
       // Images have expected file paths
-      /*Assertions.assertTrue(allImages.get(0).getImagePath().equals(testFile.getPath()),
-          "Backend's loaded image had the wrong path: " + allImages.get(0).getImagePath());*/
+      /*
+       * Assertions.assertTrue(allImages.contains(testFile.getPath()),
+       * "Backend's loaded image had the wrong path: " + allImages.get(0).getImagePath());
+       */
       // Images have expected Colors
       // TODO
       // Assertions.assertTrue(isCloseColor(allImages.get(0).getColor(), new Color(158, 176, 54)));
@@ -137,13 +140,13 @@ public class BackendUnitTests {
     }
     return null; // Default return statement to satisfy compiler
   }
-  
+
   private boolean isCloseColor(Color c1, Color c2) {
     float EPSILON = 0.001f;
     boolean retval = true;
-    float[] comp1 = new float[] { c1.getRed(), c1.getGreen(), c1.getBlue(), c1.getAlpha() };
-    float[] comp2 = new float[] { c2.getRed(), c2.getGreen(), c2.getBlue(), c2.getAlpha() };
-    for(int i = 0; i < comp1.length; i++) {
+    float[] comp1 = new float[] {c1.getRed(), c1.getGreen(), c1.getBlue(), c1.getAlpha()};
+    float[] comp2 = new float[] {c2.getRed(), c2.getGreen(), c2.getBlue(), c2.getAlpha()};
+    for (int i = 0; i < comp1.length; i++) {
       retval &= Math.abs(comp1[i] - comp2[i]) < EPSILON;
     }
     return retval;
