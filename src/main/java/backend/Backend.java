@@ -1,6 +1,5 @@
 package main.java.backend;
 
-import java.awt.color.ColorSpace;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,6 +16,8 @@ public class Backend {
    * The graph that the backend uses to find the shortest path.
    */
   protected ChoosyDijkstraGraph<PreprocessedImage, Double> graph = null;
+  
+  public final String[] SUPPORTED_FILE_EXTENSIONS;
 
   /**
    * Creates a new Backend
@@ -24,16 +25,29 @@ public class Backend {
   public Backend() {
     graph = new ChoosyDijkstraGraph<PreprocessedImage, Double>();
     allImages = new ArrayList<PreprocessedImage>();
+    // TODO verify more supported images.
+    SUPPORTED_FILE_EXTENSIONS = new String[] {".png", ".jpg", ".jpeg"};
   }
 
   /**
    * Takes a File and loads it into the graph.
    * 
-   * @throws IOException If there was trouble loading the image
+   * @throws IOException If there was trouble loading the file
    */
   public void receiveFile(File file) throws IOException {
     if (file.isDirectory()) {
-      for (File f : file.listFiles()) {
+      for (File f : file.listFiles((pathname) -> {
+        // FileFilter only accepts supported image files.
+        String fileName = pathname.getName();
+        String fileExtension = fileName.substring(fileName.indexOf('.'));
+        
+        // Checks if the file's extensions is found in the list of supported extensions.
+        boolean retval = false;
+        for(int i = 0; i < SUPPORTED_FILE_EXTENSIONS.length; i++) {
+          retval |= SUPPORTED_FILE_EXTENSIONS[i].equals(fileExtension);
+        }
+        return retval;
+      })) {
         PreprocessedImage image = new PreprocessedImage(f.getPath(), ImageServiceFactory
             .getImageProcessor().processImage(ImageServiceFactory.getImageLoader().loadImage(f)));
         addImageToGraph(image);
