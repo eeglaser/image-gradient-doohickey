@@ -36,7 +36,7 @@ public class Backend {
    * Takes a File and loads it into the graph.
    * 
    * @throws IOException If there was trouble loading the file
-   * @see main.java.backend.Backend.SUPPORTED_FILE_EXTENSIONS
+   * @see main.java.backend.Backend#SUPPORTED_FILE_EXTENSIONS
    */
   public void receiveFile(File file) throws IOException {
     if (file.isDirectory()) {
