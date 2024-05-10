@@ -93,10 +93,21 @@ public class BackendUnitTests {
   }
 
   /**
-   * Tests Backend's receiveFile method when passed a single file that is not a supported image.
+   * Tests Backend's receiveFile method when passed a single file that is not a supported image. The
+   * Backend should throw an IOException.
    */
+  @Test
   public void testLoadBadFile() {
+    String testFilePath = "test/assets/Test_InvalidFile.txt";
+    File testFile = getFile(testFilePath);
 
+    // Load in one file...
+    try {
+      back.receiveFile(testFile);
+      Assertions.fail();
+    } catch (IOException e) {
+      // This is good.
+    }
   }
 
   /**
@@ -141,11 +152,20 @@ public class BackendUnitTests {
     return null; // Default return statement to satisfy compiler
   }
 
+  /**
+   * Compares two colors to see if their RGBA values are close enough with epsilon comparison.
+   * 
+   * @param c1 first color
+   * @param c2 second color
+   * @return true if they are close enough, false otherwise
+   */
   private boolean isCloseColor(Color c1, Color c2) {
     float EPSILON = 0.001f;
     boolean retval = true;
+    // I could not get getColorComponents to work before I went to this approach :P
     float[] comp1 = new float[] {c1.getRed(), c1.getGreen(), c1.getBlue(), c1.getAlpha()};
     float[] comp2 = new float[] {c2.getRed(), c2.getGreen(), c2.getBlue(), c2.getAlpha()};
+    // See if each pair of components is close enough
     for (int i = 0; i < comp1.length; i++) {
       retval &= Math.abs(comp1[i] - comp2[i]) < EPSILON;
     }

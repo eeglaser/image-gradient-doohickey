@@ -33,38 +33,42 @@ public class Backend {
   }
 
   /**
-   * Takes a File and loads it into the graph.
+   * Takes a File and loads it into the graph. this method supports directories containing multiple
+   * files.
    * 
    * @throws IOException If there was unforeseen trouble loading the file
    * @see main.java.backend.Backend#SUPPORTED_FILE_EXTENSIONS
    */
   public void receiveFile(File file) throws IOException {
     if (file.isDirectory()) {
+      int count = 0;
       for (File f : file.listFiles((pathname) -> {
         // Lambda creates a FileFilter that only accepts supported image files.
         return hasSupportedExtension(pathname);
       })) {
         // Now, the loop will only loop through supported files in this directory.
-
-        // This ugly command chain loads and processes the average color of a BufferedImage that
-        // gets created from our file.
-        PreprocessedImage image = new PreprocessedImage(f.getPath(), ImageServiceFactory
-            .getImageProcessor().processImage(ImageServiceFactory.getImageLoader().loadImage(f)));
-        addImageToGraph(image);
-
+        addSingleFile(f);
+        count++;
+      }
+      // If there were unsupported files, we want to tell the user.
+      if(count < file.listFiles().length) {
+        // TODO how to tell the frontend without much coupling?
       }
     } else {
       // This branch concerns when the file param is just one file and not a directory.
-      // Single files have to be supported too! We just ignore unsupported files.
-      if (!hasSupportedExtension(file)) {
-        return;
-      }
-      // This ugly command chain loads and processes the average color of a BufferedImage that
-      // gets created from our file.
-      PreprocessedImage image = new PreprocessedImage(file.getPath(), ImageServiceFactory
-          .getImageProcessor().processImage(ImageServiceFactory.getImageLoader().loadImage(file)));
-      addImageToGraph(image);
+      addSingleFile(file);
     }
+  }
+
+  private void addSingleFile(File file) throws IOException {
+    if (!hasSupportedExtension(file)) {
+      throw new IOException("File " + file.getName() + " does not have a supported file extension");
+    }
+    // This ugly command chain loads and processes the average color of a BufferedImage that
+    // gets created from our file.
+    PreprocessedImage image = new PreprocessedImage(file.getPath(), ImageServiceFactory
+        .getImageProcessor().processImage(ImageServiceFactory.getImageLoader().loadImage(file)));
+    addImageToGraph(image);
   }
 
   private boolean hasSupportedExtension(File pathname) {
@@ -142,7 +146,7 @@ public class Backend {
 
   /**
    * Computes the Euclidean distance between two images using the values associated with their
-   * average Colors in RGB.
+   * average Colors in RGBA.
    * 
    * @param image1 The first image to use
    * @param image2 The second image to use
