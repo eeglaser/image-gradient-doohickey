@@ -51,8 +51,11 @@ public class Backend {
         count++;
       }
       // If there were unsupported files, we want to tell the user.
-      if(count < file.listFiles().length) {
-        // TODO how to tell the frontend without much coupling?
+      int totalLength = file.listFiles().length;
+      if (count < totalLength) {
+        throw new IOException(
+            "Supported files were added where possible, but " + (totalLength - count)
+                + " file(s) in directory " + file.getName() + " were unsupported.");
       }
     } else {
       // This branch concerns when the file param is just one file and not a directory.
