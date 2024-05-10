@@ -98,6 +98,7 @@ public class BackendUnitTests {
    */
   @Test
   public void testLoadBadFile() {
+    back = new Backend();
     String testFilePath = "test/assets/Test_InvalidFile.txt";
     File testFile = getFile(testFilePath);
 
@@ -108,13 +109,33 @@ public class BackendUnitTests {
     } catch (IOException e) {
       // This is good.
     }
+    Assertions.assertTrue(back.getAllImages().isEmpty());
   }
 
   /**
-   * Tests Backend's receiveFile method when passed a file directory that has non-supported files in
-   * it.
+   * Tests Backend's receiveFile method when passed a file directory that only has non-supported
+   * files in it.
    */
   public void testLoadBadDirectory() {
+    back = new Backend();
+    String testFilePath = "test/assets/Test_Directory_Invalid";
+    File testFile = getFile(testFilePath);
+
+    // Load in bad directory...
+    try {
+      back.receiveFile(testFile);
+      Assertions.fail();
+    } catch (IOException e) {
+      // This is good.
+    }
+    Assertions.assertTrue(back.getAllImages().isEmpty());
+  }
+  
+  /**
+   * Tests Backend's receiveFile method when passed a file directory that has a mix of non-supported
+   * files and valid files in it.
+   */
+  public void testLoadSemiDirectory() {
 
   }
 
