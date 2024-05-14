@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import main.java.structures.graph.ChoosyDijkstraGraph;
 
+/**
+ * TODO Javadoc header
+ */
 public class Backend {
   /**
    * List of all images loaded on the backend.
@@ -100,13 +103,14 @@ public class Backend {
   /**
    * Adds an image to the Backend. All image nodes in the graph are fully connected.
    * 
-   * @param image
-   * @return
+   * @param image the PreprocessedImage to add to the graph
+   * @return true if the image was successfully added, false otherwise
+   * @throws NullPointerException if image is null
    */
   public boolean addImage(PreprocessedImage image) {
     boolean retval = true;
     // Nodes must be in the graph before edges can be added
-    boolean nodeWorked = graph.insertNode(image); // throws npe if image is null
+    boolean nodeWorked = graph.insertNode(image); // throws NPE if image is null
     if (nodeWorked) {
       allImages.add(image);
     }
@@ -186,4 +190,12 @@ public class Backend {
     return copy;
   }
 
+  /**
+   * Reports whether the specified image is in the Backend's graph.
+   * @param img The image to search for
+   * @return true if the Backend's graph contains this image, false otherwise
+   */
+  public boolean hasImage(PreprocessedImage img) {
+    return graph.containsNode(img);
+  }
 }

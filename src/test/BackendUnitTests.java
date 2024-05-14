@@ -161,7 +161,13 @@ public class BackendUnitTests {
   // ------------------------------------------------------------------------------------
 
   public void testAddImage() {
-
+    Color color = new Color(158, 176, 54);
+    PreprocessedImage img =
+        new PreprocessedImage(getFile("test/assets/Test_RGB_158_176_54.png").getPath(), color);
+    
+    back.addImage(img);
+    Assertions.assertTrue(back.getAllImages().size() == baseSize + 1);
+    Assertions.assertTrue(back.hasImage(img));
   }
 
   /**
