@@ -160,13 +160,20 @@ public class BackendUnitTests {
   // ----------------------------------- Add & Remove -----------------------------------
   // ------------------------------------------------------------------------------------
 
+  /**
+   * Tests the Backend's addImage's behavior during intended use, i.e., that it properly adds
+   * images.
+   */
   public void testAddImage() {
     Color color = new Color(158, 176, 54);
     PreprocessedImage img =
         new PreprocessedImage(getFile("test/assets/Test_RGB_158_176_54.png").getPath(), color);
-    
-    back.addImage(img);
+
+    // Returns true
+    Assertions.assertTrue(back.addImage(img));
+    // Modifies size
     Assertions.assertTrue(back.getAllImages().size() == baseSize + 1);
+    // Contains image
     Assertions.assertTrue(back.hasImage(img));
   }
 
@@ -196,8 +203,22 @@ public class BackendUnitTests {
 
   }
 
+  /**
+   * Tests the Backend's removeImage's behavior during intended use, i.e., that it properly removes
+   * images.
+   */
   public void testRemoveImage() {
-
+    Color color = new Color(158, 176, 54);
+    PreprocessedImage img =
+        new PreprocessedImage(getFile("test/assets/Test_RGB_158_176_54.png").getPath(), color);
+    back.addImage(img);
+    
+    // Returns true
+    Assertions.assertTrue(back.removeImage(img));
+    // Modifies size
+    Assertions.assertTrue(back.getAllImages().size() == baseSize);
+    // Removes image
+    Assertions.assertFalse(back.hasImage(img));
   }
 
   /**
