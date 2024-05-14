@@ -71,7 +71,7 @@ public class Backend {
     // gets created from our file.
     PreprocessedImage image = new PreprocessedImage(file.getPath(), ImageServiceFactory
         .getImageProcessor().processImage(ImageServiceFactory.getImageLoader().loadImage(file)));
-    addImageToGraph(image);
+    addImage(image);
   }
 
   private boolean hasSupportedExtension(File pathname) {
@@ -93,7 +93,7 @@ public class Backend {
    * @param the PreprocessedImage to remove
    * @return true if it was successfully removed, false otherwise
    */
-  public boolean removeImageFromGraph(PreprocessedImage image) {
+  public boolean removeImage(PreprocessedImage image) {
     return graph.removeNode(image); // throws NPE if image is null
   }
 
@@ -103,21 +103,24 @@ public class Backend {
    * @param image
    * @return
    */
-  public boolean addImageToGraph(PreprocessedImage image) {
+  public boolean addImage(PreprocessedImage image) {
     boolean retval = true;
     // Nodes must be in the graph before edges can be added
-    boolean nodeWorked = graph.insertNode(image); // throws npe if an element is null
+    boolean nodeWorked = graph.insertNode(image); // throws npe if image is null
     if (nodeWorked) {
       allImages.add(image);
     }
     retval &= nodeWorked;
-    // Now all new edges can be added
-    // I love my N^2 runtime
-    for (PreprocessedImage j : allImages) {
-      if (!image.equals(j)) {
-        double dist = computeDistanceBetweenImages(image, j);
-        retval &= graph.insertEdge(image, j, dist);
-        graph.insertEdge(j, image, dist);
+    // This if statement lets us skip the loop for edges if the node could not be added.
+    if (retval) {
+      // Now all new edges can be added
+      // I love my N^2 runtime
+      for (PreprocessedImage j : allImages) {
+        if (!image.equals(j)) {
+          double dist = computeDistanceBetweenImages(image, j);
+          retval &= graph.insertEdge(image, j, dist);
+          graph.insertEdge(j, image, dist);
+        }
       }
     }
     return retval;

@@ -16,7 +16,8 @@ import main.java.backend.PreprocessedImage;
  * Tests the Backend with JUnit tests for each method.
  */
 public class BackendUnitTests {
-  Backend back; // The current backend instance being used for testing.
+  private Backend back; // The current backend instance being used for testing.
+  private int baseSize = 0;
 
   // The base local directory for files used in our tests
   // TODO change once project is named something professional :P
@@ -25,10 +26,12 @@ public class BackendUnitTests {
   @BeforeEach
   public void initialize() {
     back = new Backend();
-    // TODO load tester files
+    // TODO load tester files and update baseSize
   }
 
+  // ------------------------------------------------------------------------------------
   // ----------------------------------- File Loading -----------------------------------
+  // ------------------------------------------------------------------------------------
 
   /**
    * Tests Backend's receiveFile method when passed a single image file.
@@ -97,7 +100,7 @@ public class BackendUnitTests {
    * Backend should throw an IOException.
    */
   @Test
-  public void testLoadBadFile() {
+  public void testLoadUnsupportedFile() {
     back = new Backend();
     String testFilePath = "test/assets/Test_InvalidFile.txt";
     File testFile = getFile(testFilePath);
@@ -117,7 +120,7 @@ public class BackendUnitTests {
    * files in it.
    */
   @Test
-  public void testLoadBadDirectory() {
+  public void testLoadUnsupportedDirectory() {
     back = new Backend();
     String testFilePath = "test/assets/Test_Directory_Invalid";
     File testFile = getFile(testFilePath);
@@ -131,13 +134,13 @@ public class BackendUnitTests {
     }
     Assertions.assertTrue(back.getAllImages().isEmpty());
   }
-  
+
   /**
    * Tests Backend's receiveFile method when passed a file directory that has a mix of non-supported
    * files and valid files in it.
    */
   @Test
-  public void testLoadSemiDirectory() {
+  public void testLoadMixedDirectory() {
     back = new Backend();
     String testFilePath = "test/assets/Test_Directory_SemiValid";
     File testFile = getFile(testFilePath);
@@ -149,8 +152,68 @@ public class BackendUnitTests {
     } catch (IOException e) {
       // This is good.
     }
+    // We should add the good files, and ignore the bad ones.
     Assertions.assertTrue(back.getAllImages().size() == 1);
   }
+
+  // ------------------------------------------------------------------------------------
+  // ----------------------------------- Add & Remove -----------------------------------
+  // ------------------------------------------------------------------------------------
+
+  public void testAddImage() {
+
+  }
+
+  /**
+   * Tests the Backend's addImage when passed null. The intended behavior is for the method to throw
+   * a NullPointerException.
+   */
+  @Test
+  public void testAddNullImage() {
+    try {
+      back.addImage(null);
+      Assertions.fail("No exception thrown for null image");
+    } catch (NullPointerException e) {
+      // This is good.
+      Assertions.assertTrue(back.getAllImages().size() == baseSize);
+
+    } catch (Exception e) {
+      Assertions.fail("Unexpected exception: " + e.getClass() + " " + e.getMessage());
+    }
+  }
+
+  /**
+   * Tests the Backend's addImage when the specified image is already in the graph. The intended
+   * behavior is for the method to return false and not modify the graph at all.
+   */
+  public void testAddDuplicateImage() {
+
+  }
+
+  public void testRemoveImage() {
+
+  }
+
+  /**
+   * Tests the Backend's removeImage when passed null. The intended behavior is for the method to
+   * throw a NullPointerException.
+   */
+  public void testRemoveNullImage() {
+    try {
+      back.removeImage(null);
+      Assertions.fail("No exception thrown for null image");
+    } catch (NullPointerException e) {
+      // This is good.
+      Assertions.assertTrue(back.getAllImages().size() == baseSize);
+
+    } catch (Exception e) {
+      Assertions.fail("Unexpected exception: " + e.getClass() + " " + e.getMessage());
+    }
+  }
+
+  // ------------------------------------------------------------------------------------
+  // ---------------------------------- Helper Methods ----------------------------------
+  // ------------------------------------------------------------------------------------
 
   /**
    * This private helper method provides the tests a way to get valid File objects without the

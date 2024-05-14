@@ -1,0 +1,9 @@
+Backend
+- Determine if the average color of an image should take gamma into account at all
+
+Frontend
+- Sketch plans for frontend layouts
+
+Testing
+- Unit tests for backend methods
+- More corner cases
