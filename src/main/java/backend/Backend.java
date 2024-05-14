@@ -97,7 +97,11 @@ public class Backend {
    * @return true if it was successfully removed, false otherwise
    */
   public boolean removeImage(PreprocessedImage image) {
-    return graph.removeNode(image); // throws NPE if image is null
+    boolean retval = graph.removeNode(image); // throws NPE if image is null
+    if(retval) {
+      allImages.remove(image);
+    }
+    return retval;
   }
 
   /**
