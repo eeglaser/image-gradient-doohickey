@@ -200,7 +200,18 @@ public class BackendUnitTests {
    * behavior is for the method to return false and not modify the graph at all.
    */
   public void testAddDuplicateImage() {
-
+    // Setup
+    Color color = new Color(158, 176, 54);
+    PreprocessedImage img =
+        new PreprocessedImage(getFile("test/assets/Test_RGB_158_176_54.png").getPath(), color);
+    back.addImage(img);
+    
+    // Returns false
+    Assertions.assertFalse(back.addImage(img));
+    // Does not modify size a second time
+    Assertions.assertTrue(back.getAllImages().size() == baseSize + 1);
+    // Still contains image
+    Assertions.assertTrue(back.hasImage(img));
   }
 
   /**
