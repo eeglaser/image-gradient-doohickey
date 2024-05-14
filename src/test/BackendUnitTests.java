@@ -164,6 +164,7 @@ public class BackendUnitTests {
    * Tests the Backend's addImage's behavior during intended use, i.e., that it properly adds
    * images.
    */
+  @Test
   public void testAddImage() {
     Color color = new Color(158, 176, 54);
     PreprocessedImage img =
@@ -199,6 +200,7 @@ public class BackendUnitTests {
    * Tests the Backend's addImage when the specified image is already in the graph. The intended
    * behavior is for the method to return false and not modify the graph at all.
    */
+  @Test
   public void testAddDuplicateImage() {
     // Setup
     Color color = new Color(158, 176, 54);
@@ -218,6 +220,7 @@ public class BackendUnitTests {
    * Tests the Backend's removeImage's behavior during intended use, i.e., that it properly removes
    * images.
    */
+  @Test
   public void testRemoveImage() {
     Color color = new Color(158, 176, 54);
     PreprocessedImage img =
@@ -236,6 +239,7 @@ public class BackendUnitTests {
    * Tests the Backend's removeImage when passed null. The intended behavior is for the method to
    * throw a NullPointerException.
    */
+  @Test
   public void testRemoveNullImage() {
     try {
       back.removeImage(null);
