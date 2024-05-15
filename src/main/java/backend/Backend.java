@@ -125,7 +125,7 @@ public class Backend {
       // I love my N^2 runtime
       for (PreprocessedImage j : allImages) {
         if (!image.equals(j)) {
-          double dist = computeDistanceBetweenImages(image, j);
+          double dist = computeImageDistance(image, j);
           retval &= graph.insertEdge(image, j, dist);
           graph.insertEdge(j, image, dist);
         }
@@ -145,7 +145,7 @@ public class Backend {
    * @throws IllegalArgumentException if a parameter is not in the graph
    * @throws NoSuchElementException   if no path between the given images exists
    */
-  public List<PreprocessedImage> getPathBetweenImages(PreprocessedImage image1,
+  public List<PreprocessedImage> getImagePath(PreprocessedImage image1,
       PreprocessedImage image2)
       throws NullPointerException, IllegalArgumentException, NoSuchElementException {
     if (image1 == null || image2 == null) {
@@ -166,7 +166,7 @@ public class Backend {
    * @param image2 The second image to use
    * @return the distance between the two images
    */
-  public double computeDistanceBetweenImages(PreprocessedImage image1, PreprocessedImage image2) {
+  public double computeImageDistance(PreprocessedImage image1, PreprocessedImage image2) {
     float[] components1RGB = new float[] {image1.getColor().getRed(), image1.getColor().getGreen(),
         image1.getColor().getBlue(), image1.getColor().getAlpha()};
     float[] components2RGB = new float[] {image2.getColor().getRed(), image2.getColor().getGreen(),

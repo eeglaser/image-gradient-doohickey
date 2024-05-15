@@ -26,7 +26,6 @@ public class BackendUnitTests {
   @BeforeEach
   public void initialize() {
     back = new Backend();
-    // TODO load tester files and update baseSize
   }
 
   // ------------------------------------------------------------------------------------
@@ -38,8 +37,6 @@ public class BackendUnitTests {
    */
   @Test
   public void testLoadFile() {
-    // We don't want the preloaded tester files from initialize() for this test.
-    back = new Backend();
     String testFilePath = "test/assets/Test_RGB_158_176_54.png";
 
     // Load in one file...
@@ -67,8 +64,6 @@ public class BackendUnitTests {
    */
   @Test
   public void testLoadDirectory() {
-    // We don't want the preloaded tester files from initialize() for this test.
-    back = new Backend();
     // This directory has two valid images and nothing else.
     String testFilePath = "test/assets/Test_Directory_Valid";
 
@@ -101,7 +96,6 @@ public class BackendUnitTests {
    */
   @Test
   public void testLoadUnsupportedFile() {
-    back = new Backend();
     String testFilePath = "test/assets/Test_InvalidFile.txt";
     File testFile = getFile(testFilePath);
 
@@ -121,7 +115,6 @@ public class BackendUnitTests {
    */
   @Test
   public void testLoadUnsupportedDirectory() {
-    back = new Backend();
     String testFilePath = "test/assets/Test_Directory_Invalid";
     File testFile = getFile(testFilePath);
 
@@ -141,7 +134,6 @@ public class BackendUnitTests {
    */
   @Test
   public void testLoadMixedDirectory() {
-    back = new Backend();
     String testFilePath = "test/assets/Test_Directory_SemiValid";
     File testFile = getFile(testFilePath);
 
@@ -207,7 +199,7 @@ public class BackendUnitTests {
     PreprocessedImage img =
         new PreprocessedImage(getFile("test/assets/Test_RGB_158_176_54.png").getPath(), color);
     back.addImage(img);
-    
+
     // Returns false
     Assertions.assertFalse(back.addImage(img));
     // Does not modify size a second time
@@ -226,7 +218,7 @@ public class BackendUnitTests {
     PreprocessedImage img =
         new PreprocessedImage(getFile("test/assets/Test_RGB_158_176_54.png").getPath(), color);
     back.addImage(img);
-    
+
     // Returns true
     Assertions.assertTrue(back.removeImage(img));
     // Modifies size
@@ -251,6 +243,52 @@ public class BackendUnitTests {
     } catch (Exception e) {
       Assertions.fail("Unexpected exception: " + e.getClass() + " " + e.getMessage());
     }
+  }
+
+  // ------------------------------------------------------------------------------------
+  // ---------------------------------- Shortest Path ----------------------------------
+  // ------------------------------------------------------------------------------------
+
+  /**
+   * Tests that the Backend's shortest path method returns an expected path between images with a
+   * predefined set of tester images.
+   * 
+   * @throws IOException
+   */
+  @Test
+  public void testExpectedShortestPath() throws IOException {
+    // Setup backend
+    String path = "test/assets/Test_Directory_ShortestPath";
+    back.receiveFile(getFile(path));
+
+    // Setup references for the test to use later
+    Color lightGrey = new Color(200, 200, 200);
+    Color darkGrey = new Color(100, 100, 100);
+    List<PreprocessedImage> allImages = back.getAllImages();
+    PreprocessedImage imageWhite = null;
+    PreprocessedImage imageBlack = null;
+    for (PreprocessedImage i : allImages) {
+      if (i.getColor().equals(Color.BLACK))
+        imageBlack = i;
+      if (i.getColor().equals(Color.WHITE))
+        imageWhite = i;
+    }
+    Color[] expectedColorOrder = new Color[] {Color.WHITE, lightGrey, darkGrey, Color.BLACK};
+    Assertions.assertTrue(imageWhite != null && imageBlack != null,
+        "Could not find path endpoints!");
+
+    // Run test for a shortest path from white to black!
+    // Our expected output is a list of images with colors matching:
+    // White, light grey, dark grey, black
+    // In that exact order.
+    List<PreprocessedImage> results = back.getImagePath(imageWhite, imageBlack);
+    Assertions.assertTrue(results != null, "Results are null!");
+    Assertions.assertTrue(results.size() == 4, "Unexpected results size: " + results.size());
+    for (int i = 0; i < results.size(); i++) {
+      Assertions.assertTrue(results.get(i).getColor().equals(expectedColorOrder[i]),
+          "Results index " + i + " has unexpected color!");
+    }
+
   }
 
   // ------------------------------------------------------------------------------------
