@@ -98,7 +98,7 @@ public class Backend {
    */
   public boolean removeImage(PreprocessedImage image) {
     boolean retval = graph.removeNode(image); // throws NPE if image is null
-    if(retval) {
+    if (retval) {
       allImages.remove(image);
     }
     return retval;
@@ -145,8 +145,7 @@ public class Backend {
    * @throws IllegalArgumentException if a parameter is not in the graph
    * @throws NoSuchElementException   if no path between the given images exists
    */
-  public List<PreprocessedImage> getImagePath(PreprocessedImage image1,
-      PreprocessedImage image2)
+  public List<PreprocessedImage> getImagePath(PreprocessedImage image1, PreprocessedImage image2)
       throws NullPointerException, IllegalArgumentException, NoSuchElementException {
     if (image1 == null || image2 == null) {
       throw new NullPointerException("Both images must be set and not null");
@@ -159,8 +158,11 @@ public class Backend {
   }
 
   /**
-   * Computes the Euclidean distance between two images using the values associated with their
-   * average Colors in RGBA.
+   * Computes the square of the Euclidean distance between two images using the values associated
+   * with their average Colors in sRGB.<br>
+   * We use the square of the distance to make it seem like distant colors are farther than they
+   * are, so that the shortest path algorithm favors hopping to close colors instead of straight to
+   * the result.
    * 
    * @param image1 The first image to use
    * @param image2 The second image to use
@@ -177,7 +179,7 @@ public class Backend {
       sumOfSquares += Math.pow((components1RGB[i] - components2RGB[i]), 2);
     }
 
-    return Math.sqrt(sumOfSquares);
+    return sumOfSquares;
   }
 
   /**
@@ -196,6 +198,7 @@ public class Backend {
 
   /**
    * Reports whether the specified image is in the Backend's graph.
+   * 
    * @param img The image to search for
    * @return true if the Backend's graph contains this image, false otherwise
    */
