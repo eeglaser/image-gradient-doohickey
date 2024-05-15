@@ -291,6 +291,47 @@ public class BackendUnitTests {
 
   }
 
+  /**
+   * Tests that the Backend correctly throws a NullPointerException when passed null to its shortest
+   * path method.
+   * 
+   * @throws IOException
+   */
+  @Test
+  public void testNullShortestPath() throws IOException {
+    // Setup backend
+    String path = "test/assets/Test_Directory_ShortestPath";
+    back.receiveFile(getFile(path));
+
+    // Run test
+    Assertions.assertThrows(NullPointerException.class, () -> {
+      back.getImagePath(null, null);
+    });
+  }
+
+  /**
+   * Tests that the Backend correctly throws an IllegalArgumentException when its shortest path
+   * method is passed in image that is not in the graph.
+   * 
+   * @throws IOException
+   */
+  @Test
+  public void testInvalidShortestPath() throws IOException {
+    // Setup backend
+    String path = "test/assets/Test_Directory_ShortestPath";
+    back.receiveFile(getFile(path));
+
+    // Setup references
+    PreprocessedImage badImage = new PreprocessedImage(
+        getFile("test/assets/Test_RGB_158_176_54.png").getPath(), new Color(158, 176, 54));
+    PreprocessedImage goodImage = back.getAllImages().get(0);
+    
+    // Run test
+    Assertions.assertThrows(IllegalArgumentException.class, () -> {
+      back.getImagePath(goodImage, badImage);
+    });
+  }
+
   // ------------------------------------------------------------------------------------
   // ---------------------------------- Helper Methods ----------------------------------
   // ------------------------------------------------------------------------------------
