@@ -10,7 +10,7 @@ import main.java.structures.graph.ChoosyDijkstraGraph;
 /**
  * TODO Javadoc header
  */
-public class Backend {
+public class Backend implements BackendInterface {
   /**
    * List of all images loaded on the backend.
    */

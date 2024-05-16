@@ -3,6 +3,7 @@ Backend
 
 Frontend
 - Sketch plans for frontend layouts
+- Look into JavaFX CSS
 
 Testing
 - Unit tests for backend methods
