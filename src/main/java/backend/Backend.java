@@ -1,5 +1,6 @@
 package main.java.backend;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -204,5 +205,20 @@ public class Backend implements BackendInterface {
    */
   public boolean hasImage(PreprocessedImage img) {
     return graph.containsNode(img);
+  }
+  
+  /**
+   * Finds the first instance of an image with the specified average Color.
+   * 
+   * @param c The average color to match an image to
+   * @throws NoSuchElementException If no image could be found with the specified average color
+   */
+  public PreprocessedImage getImage(Color c) throws NoSuchElementException {
+    for(PreprocessedImage i : allImages) {
+      if(i.getColor().equals(c)) {
+        return i;
+      }
+    }
+    throw new NoSuchElementException("An image of color " + c.toString() + " was not found");
   }
 }
