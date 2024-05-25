@@ -22,4 +22,8 @@ public class PreprocessedImage {
   public Color getColor() {
     return processedColor;
   }
+  
+  public String toString() {
+    return processedColor.toString() + " " + imagePath;
+  }
 }
