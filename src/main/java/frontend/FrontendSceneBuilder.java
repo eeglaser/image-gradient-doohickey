@@ -35,7 +35,7 @@ public class FrontendSceneBuilder implements SceneBuilder {
     // add the functionality controls to the gridpane
     // remember that gridpanes use column,row coordinates
     gridpane.add(buildImagePathControls(), 0, 0);
-    gridpane.add(buildFileManagementControls(), 1, 0);
+    // gridpane.add(buildFileManagementControls(), 1, 0); TODO
 
     BorderPane base = new BorderPane();
     base.setCenter(gridpane);
@@ -53,13 +53,15 @@ public class FrontendSceneBuilder implements SceneBuilder {
     Label startLabel = buildFormattedLabel("Starting Image", 2);
 
     // Combobox for choosing the starting image
-    ComboBox<PreprocessedImage> startCB = null;// TODO
+    ComboBox<PreprocessedImage> startCB = buildFormattedComboBox();
 
     // Label for the ending image
     Label endLabel = buildFormattedLabel("Ending Image", 2);
 
     // Combobox for choosing the ending image
-    ComboBox<PreprocessedImage> endCB = null;// TODO
+    ComboBox<PreprocessedImage> endCB = buildFormattedComboBox();
+
+    // TODO button for generating results
 
     // Label for the results list
     Label resultsLabel = buildFormattedLabel("Results", 1);
@@ -69,7 +71,8 @@ public class FrontendSceneBuilder implements SceneBuilder {
 
     // Add everything into a nice VBox.
     VBox base = new VBox();
-    base.getChildren().addAll(title, startLabel, startCB, endCB, resultsLabel, resultsList);
+    // base.getChildren().addAll(title, startLabel, startCB, endCB, resultsLabel, resultsList); TODO
+    base.getChildren().addAll(title, startLabel, startCB, endCB, resultsLabel);
     return base;
   }
 
@@ -123,9 +126,10 @@ public class FrontendSceneBuilder implements SceneBuilder {
   }
 
   /**
-   * Creates and returns a ComboBox object
+   * Creates and returns a ComboBox object with custom ListCells that each have a thumbnail and the
+   * name of their image.
    * 
-   * @return
+   * @return a ComboBox of PreprocessedImages
    */
   private ComboBox<PreprocessedImage> buildFormattedComboBox() {
     // Initialize the combobox
@@ -160,7 +164,7 @@ public class FrontendSceneBuilder implements SceneBuilder {
       };
       return cell;
     };
-    
+
     // Use cell factory to get a custom cell display for each cell in the list
     comboBox.setCellFactory(callback);
 
