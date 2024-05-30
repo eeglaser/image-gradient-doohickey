@@ -13,13 +13,14 @@ import test.BackendUnitTests;
 public class Frontend extends Application {
   public static final String APP_NAME = "image-gradient-doohickey"; // TODO rename later lol
   public static final String BASE_DIRECTORY = "image-gradient-doohickey";
-  int width = 1000; // TODO change with some sort of config?
-  int height = 800;
+  String starterFilesPath = "src/main/assets/DefaultImages";
+  int width = 1200; // TODO change with some sort of config?
+  int height = 700;
 
   @Override
   public void start(Stage stage) throws Exception {
     BackendInterface back = new Backend();
-    initializeFiles(back); // TODO remove call when done with file management controls
+    //initializeFiles(back); // TODO
     SceneBuilder builder = new FrontendSceneBuilder(back);
 
     Scene scene = new Scene(builder.buildSceneGraph(), width, height);
@@ -30,18 +31,34 @@ public class Frontend extends Application {
 
   private void initializeFiles(BackendInterface back) throws Exception {
     // Get a File representing a default directory of images
-    String relativePath = BASE_DIRECTORY + "/src/main/assets/DefaultImages";
-    File file;
-    URI uri = null;
-    try {
-      uri = BackendUnitTests.class.getClassLoader().getResource(relativePath).toURI();
-    } catch (URISyntaxException e) {
-      return;
-    }
-    file = new File(uri);
+    // TODO somethins wrong lol
+    File file = getFile(starterFilesPath);
+    back.receiveFile(file);
+
+  }
+
+  private File getFile(String relativePath) {
+    String absolutePath = File.separator + relativePath.replace("/", File.separator);
+    File file = new File(absolutePath);
     if (file.exists()) {
-      // Send to the Backend
-      back.receiveFile(file);
+      return file;
+    } else {
+      // We were unable to get the file normally.
+      // Now, try to find it through the classpath. This way usually plays nicer with Eclipse.
+      URI uri;
+      try {
+        uri = BackendUnitTests.class.getClassLoader().getResource(relativePath).toURI();
+      } catch (URISyntaxException e) {
+        System.out.println("uri syntax exception");
+        return null;
+      }
+      file = new File(uri);
+      if (file.exists()) {
+        return file;
+      } else {
+        System.out.println("file does not exist");
+      }
     }
+    return null; // Default return statement to satisfy compiler
   }
 }

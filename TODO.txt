@@ -1,9 +1,11 @@
 Backend
 - Determine if the average color of an image should take gamma into account at all
+- Don't add an image if its color and file path are the same as an existing image
 
 Frontend
 - Sketch plans for frontend layouts
 - Look into JavaFX CSS
+- See if playing into ObservableList will fix things not updating
 
 Testing
 - Unit tests for backend methods
