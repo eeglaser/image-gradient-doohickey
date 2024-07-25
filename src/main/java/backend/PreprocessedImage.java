@@ -22,4 +22,10 @@ public class PreprocessedImage {
   public Color getColor() {
     return processedColor;
   }
+  
+  @Override
+  public String toString() {
+    String str = processedColor.toString();
+    return(str.substring(str.indexOf("[")) + " " + imagePath);
+  }
 }

@@ -1,1 +1,2 @@
 # image-gradient-doohickey
+The Doohickey is a tool that creates a gradient out of provided images using Dijkstra's shortest path. It can load images from files and directories on the user's machine. Currently, it is equipped with a text-based UI that runs in cmd or an IDE. Run the TextUI class to begin.
