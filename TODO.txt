@@ -1,5 +1,6 @@
 Backend
 - Determine if the average color of an image should take gamma into account at all
+- Fast batch-add
 
 Frontend
 - Sketch plans for frontend layouts
